@@ -40,20 +40,60 @@
       padding-bottom: 56px;
     }
 
+    /* Fundo com partículas escolares flutuando continuamente */
     .classroom-wall {
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(rgba(141, 110, 99, 0.14) 2px, transparent 2px);
+      background-image: radial-gradient(rgba(141, 110, 99, 0.16) 2px, transparent 2px);
       background-size: 22px 22px;
+      animation: wallDrift 18s linear infinite;
       z-index: 0;
       pointer-events: none;
+    }
+
+    @keyframes wallDrift {
+      0% { background-position: 0 0; }
+      100% { background-position: 44px 44px; }
+    }
+
+    /* Bandeirinhas / Faixa Escolar Animada no Topo */
+    .top-garland {
+      position: absolute;
+      top: 44px;
+      left: 0;
+      right: 0;
+      height: 18px;
+      z-index: 12;
+      pointer-events: none;
+      display: flex;
+      justify-content: space-around;
+      opacity: 0.85;
+    }
+
+    .flag-item {
+      width: 0;
+      height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-top: 14px solid #ff7043;
+      transform-origin: top center;
+      animation: flagSway 1.6s ease-in-out infinite alternate;
+    }
+
+    .flag-item:nth-child(2n) { border-top-color: #ffd54f; animation-delay: 0.3s; }
+    .flag-item:nth-child(3n) { border-top-color: #26a69a; animation-delay: 0.6s; }
+    .flag-item:nth-child(4n) { border-top-color: #ec407a; animation-delay: 0.9s; }
+
+    @keyframes flagSway {
+      0% { transform: rotate(-10deg); }
+      100% { transform: rotate(10deg); }
     }
 
     /* Topo */
     .top-hud {
       position: relative;
       z-index: 15;
-      padding: 2px 12px;
+      padding: 6px 12px 2px;
       text-align: center;
     }
 
@@ -61,7 +101,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
 
     .ws-badge {
@@ -103,11 +143,88 @@
       cursor: pointer;
     }
 
+    /* Linha do Título com Relógio Girando + Lupa Patrulhando */
+    .title-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    /* Relógio de Sala de Aula Animado */
+    .wall-clock {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #5d4037;
+      position: relative;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
+    }
+
+    .wall-clock::before {
+      content: '';
+      position: absolute;
+      width: 2.5px;
+      height: 11px;
+      background: #d84315;
+      top: 4px;
+      left: 50%;
+      transform-origin: bottom center;
+      animation: clockFast 3s linear infinite;
+    }
+
+    .wall-clock::after {
+      content: '';
+      position: absolute;
+      width: 2.5px;
+      height: 8px;
+      background: #3e2723;
+      top: 7px;
+      left: 50%;
+      transform-origin: bottom center;
+      animation: clockSlow 18s linear infinite;
+    }
+
+    @keyframes clockFast {
+      from { transform: translateX(-50%) rotate(0deg); }
+      to { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    @keyframes clockSlow {
+      from { transform: translateX(-50%) rotate(0deg); }
+      to { transform: translateX(-50%) rotate(360deg); }
+    }
+
     .game-title {
-      font-size: clamp(22px, 6vw, 30px);
+      font-size: clamp(22px, 6vw, 29px);
       color: #3e2723;
       text-shadow: 0 2px 0 #fff, 0 4px 10px rgba(0, 0, 0, 0.15);
       line-height: 1.05;
+      animation: titlePulse 2.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes titlePulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.03); }
+    }
+
+    /* Lupa Animada no canto direito do Título */
+    .roaming-magnifier {
+      font-size: 24px;
+      display: inline-block;
+      animation: magnifierSearch 2.2s ease-in-out infinite alternate;
+      filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.2));
+      flex-shrink: 0;
+    }
+
+    @keyframes magnifierSearch {
+      0% { transform: translate(-5px, -3px) rotate(-18deg) scale(0.95); }
+      50% { transform: translate(2px, 3px) rotate(10deg) scale(1.1); }
+      100% { transform: translate(6px, -2px) rotate(22deg) scale(1); }
     }
 
     .subtitle {
@@ -216,7 +333,7 @@
       border: 2px solid #fff;
     }
 
-    /* Caixinha das 5 Palavras Ocultas (mostra só o nº de letras até serem achadas!) */
+    /* Caixinha das 5 Palavras Ocultas */
     .targets-box {
       position: relative;
       z-index: 20;
@@ -277,6 +394,7 @@
     }
 
     .word-grid {
+      position: relative;
       display: grid;
       grid-template-columns: repeat(8, 1fr);
       gap: 3px;
@@ -287,6 +405,27 @@
       padding: 5px;
       border-radius: 14px;
       border: 2px solid rgba(255, 255, 255, 0.32);
+      overflow: hidden;
+    }
+
+    /* Feixe de luz suave varrendo a grade continuamente */
+    .word-grid::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: -60%;
+      width: 45%;
+      height: 140%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+      transform: rotate(22deg);
+      animation: gridShine 4.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes gridShine {
+      0% { left: -60%; }
+      55% { left: 130%; }
+      100% { left: 130%; }
     }
 
     .grid-cell {
@@ -668,6 +807,22 @@
   <div id="game-container">
     <div class="classroom-wall"></div>
 
+    <!-- Bandeirinhas Escolares Balançando no Topo -->
+    <div class="top-garland">
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+      <div class="flag-item"></div>
+    </div>
+
     <!-- Topo -->
     <div class="top-hud">
       <div class="status-bar">
@@ -681,7 +836,11 @@
         </div>
       </div>
 
-      <h1 class="game-title">CAÇA-PALAVRAS</h1>
+      <div class="title-stage">
+        <div class="wall-clock" title="Tempo de Aula"></div>
+        <h1 class="game-title">CAÇA-PALAVRAS</h1>
+        <span class="roaming-magnifier">🔍</span>
+      </div>
       <p class="subtitle">Procure as 5 palavras ocultas dentro da grade!</p>
     </div>
 
@@ -717,7 +876,7 @@
         <span class="progress-badge" id="progress-label">0 / 5 Achadas</span>
       </div>
 
-      <!-- 5 Palavras Escondidas (Exibe apenas a quantidade de letras de cada uma!) -->
+      <!-- 5 Palavras Escondidas -->
       <div class="targets-box">
         <div class="targets-list" id="targets-list"></div>
       </div>
@@ -1216,7 +1375,6 @@
       renderGrid();
     }
 
-    // Mostra apenas quantas letras cada palavra tem até alguém encontrá-la!
     function renderTargets() {
       const container = document.getElementById('targets-list');
       container.innerHTML = '';
